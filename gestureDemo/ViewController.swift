@@ -101,62 +101,13 @@ class ViewController: UIViewController {
         return CGAffineTransform(scaleX: 0, y: 0)
     }
     @objc func pinchRecognized(_ sender:UIPinchGestureRecognizer) {
-//        guard let touchedView = sender.view else {return}
-//        var originalScale = CGFloat.init()
-//        switch sender.state {
-//        case .began:
-//            if activeRecognizers.count == 0 {
-//                touchedView.transform = CGAffineTransform(scaleX: lastScale, y: lastScale)
-//                activeRecognizers.insert(sender)
-//            }
-//        case .changed:
-//            for gesture in activeRecognizers {
-//
-//            }
-//            let newScale = sender.scale + originalScale
-//            touchedView.transform = CGAffineTransform(scaleX: newScale, y: newScale)
-//            touchedView.transform = CGAffineTransform(rotationAngle: lastRotation)
-//        case .ended:
-//            lastScale = sender.scale
-//            let newScale = sender.scale + originalScale
-//            touchedView.transform = CGAffineTransform(scaleX: newScale, y: newScale)
-//            touchedView.transform = CGAffineTransform(rotationAngle: lastRotation)
-//            activeRecognizers.remove(sender)
-//        default:
-//            break
-//        }
-//        if sender.state == .began {
-//            sender.scale = lastScale
-//            originalScale = sender.scale
-//            touchedView.transform = CGAffineTransform(rotationAngle: lastRotation)
-//        } else if sender.state == .ended {
-//            lastScale = sender.scale
-//
-//        } else if sender.state == .changed {
-//            let newScale = sender.scale + originalScale
-//            touchedView.transform = CGAffineTransform(scaleX: newScale, y: newScale)
-//            touchedView.transform = CGAffineTransform(rotationAngle: lastRotation)
-//        }
         guard sender.view != nil else { return }
-
         if sender.state == .began || sender.state == .changed {
             sender.view?.transform = sender.view!.transform.scaledBy(x: sender.scale, y: sender.scale)
             sender.scale = 1
         }
     }
     @objc func rotate(_ sender:UIRotationGestureRecognizer) {
-//        guard let touchedView = sender.view else {return}
-//        var originalRotation = CGFloat.init()
-//
-//        if sender.state == .began {
-//            sender.rotation = lastRotation
-//            originalRotation = sender.rotation
-//        } else if sender.state == .ended {
-//            lastRotation = sender.rotation
-//        } else if sender.state == .changed {
-//            let newRotation = sender.rotation + originalRotation
-//            touchedView.transform = CGAffineTransform(rotationAngle: newRotation)
-//        }
         guard sender.view != nil else { return }
         if sender.state == .began || sender.state == .changed {
             sender.view?.transform = sender.view!.transform.rotated(by: sender.rotation)
@@ -170,9 +121,15 @@ class ViewController: UIViewController {
         sender.setTranslation(CGPoint.zero, in: self.view)
         let dragPoint = sender.location(in: self.view)
         let hitView = self.view.hitTest(dragPoint, with: nil)
-        if let  hh = hitView?.frame.intersects(trashCan.frame) {
-            if hh {
-                trashCan.transform = CGAffineTransform(scaleX: 1.1, y: 1.1)
+        if let didHitTrashCan = hitView?.frame.intersects(trashCan.frame) {
+            if didHitTrashCan {
+                trashCan.transform = CGAffineTransform(scaleX: 1.2, y: 1.2)
+                UIView.animate(withDuration: 2, animations: {
+                    hitView?.alpha = 0.0
+                }) { (isFinished) in
+                    hitView?.removeFromSuperview()
+                    self.trashCan.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
+                }
             } else {
                 trashCan.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
             }
