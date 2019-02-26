@@ -126,6 +126,8 @@ class ViewController: UIViewController {
                 trashCan.transform = CGAffineTransform(scaleX: 1.2, y: 1.2)
                 UIView.animate(withDuration: 2, animations: {
                     hitView?.alpha = 0.0
+                    hitView?.center = self.trashCan.center
+                    hitView?.transform = CGAffineTransform(scaleX: 0.3, y: 0.3)
                 }) { (isFinished) in
                     hitView?.removeFromSuperview()
                     self.trashCan.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
